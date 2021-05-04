@@ -7,8 +7,8 @@ output: html_notebook
 
 Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
 
-# Import needed libraries
 ```{r}
+# Import needed libraries
 library(readr)
 library(lubridate)
 library(ggplot2)
@@ -81,7 +81,7 @@ W6 <- umsatzdaten_gekuerzt %>% subset(Warengruppe==6)
 
 
 ```{r}
-# Berechnungen für Warengruppe 1
+# Berechnungen für Warengruppe 1 und Einfügen einer neuen Spalte mit der Bezeichnung 'Warengruppe'
 
 W1_sum <- W1 %>%
   group_by(Wochentag) %>%
@@ -96,7 +96,7 @@ W1_sum <- W1 %>%
 
 ```
 ```{r}
-# Berechnungen für Warengruppe 2
+# Berechnungen für Warengruppe 2 und Einfügen einer neuen Spalte mit der Bezeichnung 'Warengruppe'
 
 W2_sum <- W2 %>%
   group_by(Wochentag) %>%
@@ -110,7 +110,7 @@ W2_sum <- W2 %>%
   mutate( Warengruppe="Warengruppe 2")
 ```
 ```{r}
-# Berechnungen für Warengruppe 3
+# Berechnungen für Warengruppe 3 und Einfügen einer neuen Spalte mit der Bezeichnung 'Warengruppe'
 
 W3_sum <- W3 %>%
   group_by(Wochentag) %>%
@@ -124,7 +124,7 @@ W3_sum <- W3 %>%
   mutate( Warengruppe="Warengruppe 3")
 ```
 ```{r}
-# Berechnungen für Warengruppe 4
+# Berechnungen für Warengruppe 4 und Einfügen einer neuen Spalte mit der Bezeichnung 'Warengruppe'
 
 W4_sum <- W4 %>%
   group_by(Wochentag) %>%
@@ -138,7 +138,7 @@ W4_sum <- W4 %>%
   mutate( Warengruppe="Warengruppe 4")
 ```
 ```{r}
-# Berechnungen für Warengruppe 5
+# Berechnungen für Warengruppe 5 und Einfügen einer neuen Spalte mit der Bezeichnung 'Warengruppe'
 
 W5_sum <- W5 %>%
   group_by(Wochentag) %>%
@@ -152,7 +152,7 @@ W5_sum <- W5 %>%
   mutate( Warengruppe="Warengruppe 5")
 ```
 ```{r}
-# Berechnungen für Warengruppe 6
+# Berechnungen für Warengruppe 6 und Einfügen einer neuen Spalte mit der Bezeichnung 'Warengruppe'
 
 W6_sum <- W6 %>%
   group_by(Wochentag) %>%
@@ -167,7 +167,7 @@ W6_sum <- W6 %>%
 ```
 ```{r}
 
-# selektion der Wochentage
+# selektion und Hierarchisierung der Wochentage mit "levels"
 
 W1_sum$Wochentag <- factor(W1_sum$Wochentag, levels= c("Montag", "Dienstag", 
                                                                  "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"))
@@ -188,21 +188,6 @@ W6_sum$Wochentag <- factor(W6_sum$Wochentag, levels= c("Montag", "Dienstag",
                                                                  "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"))
 ```
 
-
-```{r}
-# daten Plotten
-ggplot(W1_sum) + 
-geom_bar( aes(x=Wochentag, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
-  geom_errorbar( aes(x=Wochentag, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
-  ggtitle("Warengruppe 1")
-```
-```{r}
-# daten Plotten
-ggplot(W2_sum) + 
-geom_bar( aes(x=Wochentag, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
-  geom_errorbar( aes(x=Wochentag, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
-  ggtitle("Warengruppe 2")
-```
 
 ```{r}
 # Daten mergen mit do.call
