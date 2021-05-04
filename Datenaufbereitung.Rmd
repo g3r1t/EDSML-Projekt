@@ -1,0 +1,28 @@
+---
+title: "Datenaufbereitung"
+author: "g3r!t"
+date: "4 5 2021"
+output: powerpoint_presentation
+---
+
+```{r import libraries}
+# Import needed libraries
+library(ggplot2)
+library(readr)
+library(lubridate)
+library(dplyr)
+library(forcats)
+```
+
+
+```{r import and merge datasets}
+umsatzdaten <- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/umsatzdaten_gekuerzt.csv")
+kiwo <- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/kiwo.csv")
+wetterdaten <- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/wetter.csv")
+```
+
+## Slide with Plot
+
+```{r}
+```
+
