@@ -17,22 +17,26 @@ library(dplyr)
 
 ```{r}
 # Import turnover data
+
 umsatzdaten_gekuerzt<- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/umsatzdaten_gekuerzt.csv")
 View(umsatzdaten)
 
 ```
 ``` {r}
-# Create variable weekday in a new column
+# Create variable weekday in a new column.
+
 umsatzdaten_gekuerzt$Wochentag <- weekdays(umsatzdaten_gekuerzt$Datum)
 ```
 
 ```{r}
+# Selektion von 'Wochentag' und 'Umsatz' aus dem großen Datensatz.
+
 umsatzdaten<- umsatzdaten_gekuerzt %>% select(Wochentag, Umsatz) 
 
 ```
 
 ``` {r}
-# Calculates mean and sd
+# Berechnung von Mittelwert und Standardabweichun sowie Hinzufügen zwei weiterer Spalten 
 my_sum <- umsatzdaten %>%
   group_by(Wochentag) %>%
   summarise(
@@ -46,7 +50,7 @@ my_sum <- umsatzdaten %>%
 ```
 
 ```{r}
-# selektion der Wochentage, mit levels -> Hierarchie
+# selektion und Hierarchisierung der Wochentage mit 'levels'
 
 my_sum$Wochentag <- factor(my_sum$Wochentag, levels= c("Montag", "Dienstag", 
                                                                  "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"))
@@ -55,21 +59,21 @@ my_sum$Wochentag <- factor(my_sum$Wochentag, levels= c("Montag", "Dienstag",
 
 ``` {r}
 
-# Standard deviation
+# Balkendiagramm mit Standardabweichung plotten
 ggplot(my_sum) +
   geom_bar( aes(x=Wochentag, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
   geom_errorbar( aes(x=Wochentag, ymin=mean-sd, ymax=mean+sd), width=0.4, colour="orange", alpha=0.9, size=1.5) +
   ggtitle("using standard deviation")
 
 
-# Confidence Interval
+# Balkendiagramm mit Confidence Interval plotten
 ggplot(my_sum) +
   geom_bar( aes(x=Wochentag, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
   geom_errorbar( aes(x=Wochentag, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
   ggtitle("using confidence interval")
 ```
 ```{r}
-# Aus Umsatzdaten Datensatz definieren, der ausschließlich jeweils Warengruppe 1-5 enthält
+# Aus Umsatzdaten entsprechende Datensätze definieren, die ausschließlich jeweils Warengruppe 1-6 enthalten über 'subset'
 
 W1 <- umsatzdaten_gekuerzt %>% subset(Warengruppe==1)
 W2 <- umsatzdaten_gekuerzt %>% subset(Warengruppe==2)
@@ -167,7 +171,7 @@ W6_sum <- W6 %>%
 ```
 ```{r}
 
-# selektion und Hierarchisierung der Wochentage mit "levels"
+# Hierarchisierung der Wochentage mit "levels"
 
 W1_sum$Wochentag <- factor(W1_sum$Wochentag, levels= c("Montag", "Dienstag", 
                                                                  "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"))
