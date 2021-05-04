@@ -1,0 +1,229 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+  
+  This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+# Import needed libraries
+```{r}
+library(readr)
+library(lubridate)
+library(ggplot2)
+library(dplyr)
+```
+
+```{r}
+# Import turnover data
+umsatzdaten_gekuerzt<- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/umsatzdaten_gekuerzt.csv")
+View(umsatzdaten)
+
+```
+``` {r}
+# Create variable weekday in a new column
+umsatzdaten_gekuerzt$Wochentag <- weekdays(umsatzdaten_gekuerzt$Datum)
+```
+
+```{r}
+umsatzdaten<- umsatzdaten_gekuerzt %>% select(Wochentag, Umsatz) 
+
+```
+
+``` {r}
+# Calculates mean and sd
+my_sum <- umsatzdaten %>%
+  group_by(Wochentag) %>%
+  summarise(
+    n=n(),
+    mean = mean(Umsatz),
+    sd = sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+```
+
+```{r}
+# selektion der Wochentage, mit levels -> Hierarchie
+
+my_sum$Wochentag <- factor(my_sum$Wochentag, levels= c("Montag", "Dienstag", 
+                                                                 "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"))
+
+```
+
+``` {r}
+
+# Standard deviation
+ggplot(my_sum) +
+  geom_bar( aes(x=Wochentag, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=Wochentag, ymin=mean-sd, ymax=mean+sd), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("using standard deviation")
+
+
+# Confidence Interval
+ggplot(my_sum) +
+  geom_bar( aes(x=Wochentag, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=Wochentag, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("using confidence interval")
+```
+```{r}
+# Aus Umsatzdaten Datensatz definieren, der ausschließlich jeweils Warengruppe 1-5 enthält
+
+W1 <- umsatzdaten_gekuerzt %>% subset(Warengruppe==1)
+W2 <- umsatzdaten_gekuerzt %>% subset(Warengruppe==2)
+W3 <- umsatzdaten_gekuerzt %>% subset(Warengruppe==3)
+W4 <- umsatzdaten_gekuerzt %>% subset(Warengruppe==4)
+W5 <- umsatzdaten_gekuerzt %>% subset(Warengruppe==5)
+W6 <- umsatzdaten_gekuerzt %>% subset(Warengruppe==6)
+```
+
+
+```{r}
+# Berechnungen für Warengruppe 1
+
+W1_sum <- W1 %>%
+  group_by(Wochentag) %>%
+  summarise(
+    n=n(),
+    mean = mean(Umsatz),
+    sd = sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1)) %>%
+  mutate( Warengruppe="Warengruppe 1")
+
+```
+```{r}
+# Berechnungen für Warengruppe 2
+
+W2_sum <- W2 %>%
+  group_by(Wochentag) %>%
+  summarise(
+    n=n(),
+    mean = mean(Umsatz),
+    sd = sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))  %>%
+  mutate( Warengruppe="Warengruppe 2")
+```
+```{r}
+# Berechnungen für Warengruppe 3
+
+W3_sum <- W3 %>%
+  group_by(Wochentag) %>%
+  summarise(
+    n=n(),
+    mean = mean(Umsatz),
+    sd = sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))%>%
+  mutate( Warengruppe="Warengruppe 3")
+```
+```{r}
+# Berechnungen für Warengruppe 4
+
+W4_sum <- W4 %>%
+  group_by(Wochentag) %>%
+  summarise(
+    n=n(),
+    mean = mean(Umsatz),
+    sd = sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))%>%
+  mutate( Warengruppe="Warengruppe 4")
+```
+```{r}
+# Berechnungen für Warengruppe 5
+
+W5_sum <- W5 %>%
+  group_by(Wochentag) %>%
+  summarise(
+    n=n(),
+    mean = mean(Umsatz),
+    sd = sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))%>%
+  mutate( Warengruppe="Warengruppe 5")
+```
+```{r}
+# Berechnungen für Warengruppe 6
+
+W6_sum <- W6 %>%
+  group_by(Wochentag) %>%
+  summarise(
+    n=n(),
+    mean = mean(Umsatz),
+    sd = sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))%>%
+  mutate( Warengruppe="Warengruppe 6")
+```
+```{r}
+
+# selektion der Wochentage
+
+W1_sum$Wochentag <- factor(W1_sum$Wochentag, levels= c("Montag", "Dienstag", 
+                                                                 "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"))
+
+W2_sum$Wochentag <- factor(W2_sum$Wochentag, levels= c("Montag", "Dienstag", 
+                                                                 "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"))
+
+W3_sum$Wochentag <- factor(W3_sum$Wochentag, levels= c("Montag", "Dienstag", 
+                                                                 "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"))
+
+W4_sum$Wochentag <- factor(W4_sum$Wochentag, levels= c("Montag", "Dienstag", 
+                                                                 "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"))
+
+W5_sum$Wochentag <- factor(W5_sum$Wochentag, levels= c("Montag", "Dienstag", 
+                                                                 "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"))
+
+W6_sum$Wochentag <- factor(W6_sum$Wochentag, levels= c("Montag", "Dienstag", 
+                                                                 "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"))
+```
+
+
+```{r}
+# daten Plotten
+ggplot(W1_sum) + 
+geom_bar( aes(x=Wochentag, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=Wochentag, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("Warengruppe 1")
+```
+```{r}
+# daten Plotten
+ggplot(W2_sum) + 
+geom_bar( aes(x=Wochentag, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=Wochentag, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("Warengruppe 2")
+```
+
+```{r}
+# Daten mergen mit do.call
+
+umsatzdaten_merged <- do.call("rbind", list(W1_sum, W2_sum, W3_sum, W4_sum, W5_sum, W6_sum))
+```
+
+```{r}
+# Plotten in der wrap-Variante
+
+ggplot(umsatzdaten_merged) +
+  facet_wrap(~Warengruppe) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0)) +
+  geom_bar( aes(x=Wochentag, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=Wochentag, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5)
+```
+
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
