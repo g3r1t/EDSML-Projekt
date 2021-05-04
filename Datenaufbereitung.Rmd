@@ -30,7 +30,11 @@ wetterdaten <- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfueh
 wettercodes <- read_delim("https://raw.githubusercontent.com/g3r1t/EDSML-Projekt/main/Wettercodes.csv", 
     ";", escape_double = FALSE, trim_ws = TRUE)
 
-#join dataframes
+#leftjoin dataframes
 UmsatzUndKiwo <- left_join(umsatzdaten, kiwo, by = "Datum")
 AlleDatenBeisammen <- left_join(UmsatzUndKiwo, wetterdaten, by = "Datum")
+
+#fulljoin dataframes
+KiwoUndUmsatz <- full_join(umsatzdaten, kiwo, by = "Datum")
+Alles <- full_join(KiwoUndUmsatz, wetterdaten, by = "Datum")
 ```
