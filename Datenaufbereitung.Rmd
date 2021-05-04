@@ -16,13 +16,21 @@ library(forcats)
 
 
 ```{r import and merge datasets}
+
+# 1=Brot, 2=Broetchen, 3=Crossaint, 4=Konditorei, 5=Kuchen, 6=Saisonbrot
 umsatzdaten <- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/umsatzdaten_gekuerzt.csv")
+
 kiwo <- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/kiwo.csv")
+
+#URL weather codes https://www.seewetter-kiel.de/seewetter/daten_symbole.htm
+#wind speed in knots[kn = sm/h = (km/h)/1.852]
 wetterdaten <- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/wetter.csv")
+
+#import weathercodes
+wettercodes <- read_delim("https://raw.githubusercontent.com/g3r1t/EDSML-Projekt/main/Wettercodes.csv", 
+    ";", escape_double = FALSE, trim_ws = TRUE)
+
+#join dataframes
+UmsatzUndKiwo <- left_join(umsatzdaten, kiwo, by = "Datum")
+AlleDatenBeisammen <- left_join(UmsatzUndKiwo, wetterdaten, by = "Datum")
 ```
-
-## Slide with Plot
-
-```{r}
-```
-
