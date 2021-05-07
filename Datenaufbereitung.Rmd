@@ -23,6 +23,11 @@ library(forcats)
 umsatzdaten <- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/umsatzdaten_gekuerzt.csv")
 
 kiwo <- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/kiwo.csv")
+
+# Convert ware group number into ware group name
+Warengruppen <- c("Brot", "Brötchen", "Crossaint", "Konditorei", "Kuchen", "Saisonbrot")
+for (e in as.numeric(row.names(umsatzdaten)))
+  umsatzdaten$Warengruppe[e] <- Warengruppen[as.numeric(umsatzdaten$Warengruppe[e])]
 ```
 
 
