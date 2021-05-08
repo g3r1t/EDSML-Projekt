@@ -18,44 +18,44 @@ library(forcats)
 ```
 
 
-```{r import and merge datasets}
-# 1=Brot, 2=Broetchen, 3=Crossaint, 4=Konditorei, 5=Kuchen, 6=Saisonbrot
+```{r import turnover data}
+#import turnover data
 umsatzdaten <- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/umsatzdaten_gekuerzt.csv")
 
-kiwo <- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/kiwo.csv")
-
 # Convert ware group number into ware group name
+# 1=Brot, 2=Broetchen, 3=Crossaint, 4=Konditorei, 5=Kuchen, 6=Saisonbrot
 Warengruppen <- c("Brot", "Brötchen", "Crossaint", "Konditorei", "Kuchen", "Saisonbrot")
 for (e in as.numeric(row.names(umsatzdaten)))
   umsatzdaten$Warengruppe[e] <- Warengruppen[as.numeric(umsatzdaten$Warengruppe[e])]
 ```
+```{r import kiwo data}
+#import kiwo data
+kiwo <- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/kiwo.csv")
+```
 
+```{r import weather data}
+#import weather data
+wetterdaten <- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/wetter.csv")
 
-```{r import and merge datasets}
+#import weathercodes
 #URL weather codes https://www.seewetter-kiel.de/seewetter/daten_symbole.htm
 #wind speed in knots[kn = sm/h = (km/h)/1.852]
-wetterdaten <- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/wetter.csv")
-```
-
-
-```{r import and change of column name}
-#import weathercodes
 wettercodes <- read_delim("https://raw.githubusercontent.com/g3r1t/EDSML-Projekt/main/Wettercodes.csv", 
     ";", escape_double = FALSE, trim_ws = TRUE)
+
 # Change column-name of "Code" to "Wettercode"
 colnames(wettercodes)[colnames(wettercodes) == "Code"] <- "Wettercode"
+
+#windchill berechnen (https://de.wikipedia.org/wiki/Windchill)
+for (e in as.numeric(row.names(wetterdaten)))
+  wetterdaten$Windchill[e] <- 13.12 + 0.6215 * wetterdaten$Temperatur[e] - 11.37 * 
+                              (wetterdaten$Windgeschwindigkeit[e]*1.852)**0.16 + 
+                              0.3965*wetterdaten$Temperatur[e] * 
+                              (wetterdaten$Windgeschwindigkeit[e]*1.852)**0.16
 ```
 
-
-```{r merge datasets with leftjoin}
-#leftjoin dataframes
-UmsatzUndKiwo <- left_join(umsatzdaten, kiwo, by = "Datum")
-AlleDatenBeisammen <- left_join(UmsatzUndKiwo, wetterdaten, by = "Datum")
-```
-
-
-```{r merge datasets with fulljoin}
-#fulljoin dataframes
+```{r merge datasets}
+#merge datasets
 KiwoUndUmsatz <- full_join(umsatzdaten, kiwo, by = "Datum")
 Alles <- full_join(KiwoUndUmsatz, wetterdaten, by = "Datum")
 AllesUndWettercodes <- left_join(Alles, wettercodes, by = "Wettercode")
