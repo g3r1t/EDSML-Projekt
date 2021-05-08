@@ -4,9 +4,6 @@ author: "g3r!t"
 date: "4 5 2021"
 output: powerpoint_presentation
 ---
-```{r}
-install.packages("tidyverse")
-```
 
 ```{r import libraries}
 # Import needed libraries
