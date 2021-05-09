@@ -60,7 +60,7 @@ for (e in as.numeric(row.names(wetterdaten)))
 
 #Create vector of all month numbers in double digits
 months <- c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
-#create vector of all years of umsatzdaten
+#create vector of all years of "umsatzdaten"
 years <- as.character(13:19)
 
 
