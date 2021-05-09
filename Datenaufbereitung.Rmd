@@ -12,6 +12,8 @@ library(readr)
 library(lubridate)
 library(dplyr)
 library(forcats)
+library(RCurl)
+library(readxl)
 ```
 
 
@@ -49,6 +51,48 @@ for (e in as.numeric(row.names(wetterdaten)))
                               (wetterdaten$Windgeschwindigkeit[e]*1.852)**0.16 + 
                               0.3965*wetterdaten$Temperatur[e] * 
                               (wetterdaten$Windgeschwindigkeit[e]*1.852)**0.16
+```
+```{r import overnight stay data}
+months <- c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
+years <- as.character(13:19)
+
+for (e in years)
+  if (e == "13") {
+    JahrMonat <- paste(e, months, sep = "")
+  } else {
+    a <- paste(e, months, sep = "")
+    JahrMonat <- c(JahrMonat, a)
+  }
+
+
+Uebernachtungen <- ""
+for (e in JahrMonat){
+  print(e)
+  filename <- paste("G_IV_1-m",e,"_SH.xlsx", sep = "")
+  url <- paste("https://www.statistik-nord.de/fileadmin/Dokumente/Statistische_Berichte/industrie__handel_und_dienstl/G_IV_1_m_S/", filename, sep = "")
+  if (url.exists(url=url)) {
+    filedest <- paste("sheets/", filename, sep = "")
+    curl::curl_download(url, filedest)
+    xls <- read_excel(filedest, sheet = "T1_1")
+    Uebernachtungen <- c(Uebernachtungen, xls[4][xls[1] == "02 Kiel"])
+  } else {
+      filename <- paste("G_IV_1-m",e,"_SH-.xlsx", sep = "")
+      url <- paste("https://www.statistik-nord.de/fileadmin/Dokumente/Statistische_Berichte/industrie__handel_und_dienstl/G_IV_1_m_S/", filename, sep = "")
+      if (!url.exists(url=url)) {
+        filename <- paste("G_IV_1_m_S_",e,".xlsx", sep = "")
+        url <- paste("https://www.statistik-nord.de/fileadmin/Dokumente/Statistische_Berichte/industrie__handel_und_dienstl/G_IV_1_m_S/", filename, sep = "")
+        if (!url.exists(url=url)) {
+          filename <- paste("G_IV_1_m",e,"_SH.xlsx", sep = "")
+          url <- paste("https://www.statistik-nord.de/fileadmin/Dokumente/Statistische_Berichte/industrie__handel_und_dienstl/G_IV_1_m_S/", filename, sep = "")
+        }
+      }
+    filedest <- paste("sheets/", filename, sep = "")
+    curl::curl_download(url, filedest)
+    xls <- read_excel(filedest, sheet = "T1_1")
+    Uebernachtungen <- c(Uebernachtungen, xls[4][xls[1] == "02 Kiel"])
+  }
+}
+Uebernachtungen <- as.numeric(Uebernachtungen[-1])
 ```
 
 ```{r merge datasets}
