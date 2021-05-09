@@ -125,5 +125,15 @@ Uebernachtungen <- data.frame("Monatscode"=JahrMonat, "Uebernachtungen"=Uebernac
 #merge datasets
 KiwoUndUmsatz <- full_join(umsatzdaten, kiwo, by = "Datum")
 Alles <- full_join(KiwoUndUmsatz, wetterdaten, by = "Datum")
-AllesUndWettercodes <- left_join(Alles, wettercodes, by = "Wettercode")
+Alles <- left_join(Alles, wettercodes, by = "Wettercode")
+
+#merge over night stays with "Alles"
+#create column of "Monatscode" for each date of "Alles" to full_join() by "Monatscode"
+
+for (e in as.numeric(row.names(Alles))) {
+Alles$Monatscode[e] <- paste(
+  (year(Alles$Datum[e])-2000),
+  formatC(month(Alles$Datum[e]), width = 2, format = "d", flag = "0"), sep = "")
+}
+Alles <- full_join(Alles, Uebernachtungen, by = "Monatscode")
 ```
