@@ -51,6 +51,8 @@ for (e in as.numeric(row.names(wetterdaten)))
                               (wetterdaten$Windgeschwindigkeit[e]*1.852)**0.16 + 
                               0.3965*wetterdaten$Temperatur[e] * 
                               (wetterdaten$Windgeschwindigkeit[e]*1.852)**0.16
+
+#windchill vs Hitzeindex zum faktorisieren
 ```
 ```{r import overnight stay data}
 #The required data is saved in the form of *.xlsx sheets at https://www.statistik-nord.de/fileadmin/Dokumente/Statistische_Berichte/industrie__handel_und_dienstl/G_IV_1_m_S/G_IV_1-m1506_SH.xlsx 
@@ -136,4 +138,13 @@ Alles$Monatscode[e] <- paste(
   formatC(month(Alles$Datum[e]), width = 2, format = "d", flag = "0"), sep = "")
 }
 Alles <- full_join(Alles, Uebernachtungen, by = "Monatscode")
+```
+
+```{r somewhat analyzed xD}
+#ein bisschen code aus der Vorlesung
+mod <- lm(Umsatz ~ Uebernachtungen + Temperatur + Windchill, Alles)
+
+summary(mod)
+
+table(kiwo)
 ```
