@@ -103,15 +103,15 @@ for (e in JahrMonat) {
             "https://www.statistik-nord.de/fileadmin/Dokumente/Statistische_Berichte/industrie__handel_und_dienstl/G_IV_1_m_S/", filename, sep = "")
         }
       }
-    #declare file destination to be inside folder "sheets"
-    filedest <- paste("sheets/", filename, sep = "")
-    #download file from "url" into "filedest"
-    curl::curl_download(url, filedest)
-    #import only sheet "T1_1" from file "filename" into variable xls
-    xls <- read_excel(filedest, sheet = "T1_1")
-    #extract only overnight stays for kiel from xls and concatenate it with the former vector "Uebernachtungen"
-    Uebernachtungen <- c(Uebernachtungen, xls[4][xls[1] == "02 Kiel"])
-  }
+      #declare file destination to be inside folder "sheets"
+      filedest <- paste("sheets/", filename, sep = "")
+      #download file from "url" into "filedest"
+      curl::curl_download(url, filedest)
+      #import only sheet "T1_1" from file "filename" into variable xls
+      xls <- read_excel(filedest, sheet = "T1_1")
+      #extract only overnight stays for kiel from xls and concatenate it with the former vector "Uebernachtungen"
+      Uebernachtungen <- c(Uebernachtungen, xls[4][xls[1] == "02 Kiel"])
+    }
 }
 #remove the empty string used to declare "Ubernachtungen" initially and convert "Uebernachtungen from a vector of strings to a vector of numerics
 Uebernachtungen <- as.numeric(Uebernachtungen[-1])
