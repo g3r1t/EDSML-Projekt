@@ -140,6 +140,9 @@ Uebernachtungen <- data.frame("Monatscode"=JahrMonat, "Uebernachtungen"=Uebernac
 ```{r merge datasets}
 #merge datasets
 KiwoUndUmsatz <- full_join(umsatzdaten, kiwo, by = "Datum")
+# convert NAs for KiWo to 0s
+KiwoUndUmsatz$KielerWoche[is.na(KiwoUndUmsatz$KielerWoche)] <- 0
+
 Alles <- full_join(KiwoUndUmsatz, wetterdaten, by = "Datum")
 Alles <- left_join(Alles, wettercodes, by = "Wettercode")
 
