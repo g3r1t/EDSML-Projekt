@@ -133,8 +133,27 @@ Uebernachtungen <- as.numeric(Uebernachtungen[-1])
 #create common dataframe for "Uebernachtungen" and "JahrMonat"
 Uebernachtungen <- data.frame("Monatscode"=JahrMonat, "Uebernachtungen"=Uebernachtungen)
 
+# Spannweite der Übernachtungszahlen in Abhängigkeit vom Mittelwert ermitteln (hier muss noch aggregiert werden!14.05.2021, SBo)
 
-#still need to merge datasets
+mean_Uebernachtungen <- mean(Uebernachtungen$Uebernachtungen)
+span_Uebernachtungen = (max(Uebernachtungen$Uebernachtungen) - min(Uebernachtungen$Uebernachtungen))/mean_Uebernachtungen
+
+B <- mean_Uebernachtungen
+C <- mean_Uebernachtungen * span_Uebernachtungen
+A <- mean_Uebernachtungen * 1/span_Uebernachtungen
+
+# Kategorisierung der Übernachtungszahlen 
+
+for (e in as.numeric(row.names(Uebernachtungen))) {
+  if (Uebernachtungen$Uebernachtungen[e] <= A) {
+    Uebernachtungen$Kategorie[e] <- "niedrig"
+  } else if (Uebernachtungen$Uebernachtungen[e] < C) {
+    Uebernachtungen$Kategorie[e] <- "mittel"
+  } else if (Uebernachtungen$Uebernachtungen[e] >= C) {
+      Uebernachtungen$Kategorie[e] <- "hoch"
+    }
+}
+as.factor(Uebernachtungen$Kategorie)
 ```
 
 ```{r merge datasets}
