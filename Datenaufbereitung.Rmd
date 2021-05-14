@@ -21,6 +21,20 @@ library(readxl)
 #import turnover data
 umsatzdaten <- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/umsatzdaten_gekuerzt.csv")
 
+#get weekday
+umsatzdaten$Wochentag <- weekdays(umsatzdaten$Datum)
+
+#create boolean value for weekend/workday 1/0
+for (e in as.numeric(row.names(umsatzdaten))) {  
+  if (umsatzdaten$Wochentag[e] == "Samstag") {
+    umsatzdaten$Wochenende[e] <- 1
+  } else if (umsatzdaten$Wochentag[e] =="Sonntag") {
+    umsatzdaten$Wochenende[e] <- 1
+  } else {
+    umsatzdaten$Wochenende[e] <- 0
+  }
+}
+
 # Convert ware group number into ware group name
 # 1=Brot, 2=Broetchen, 3=Crossaint, 4=Konditorei, 5=Kuchen, 6=Saisonbrot
 Warengruppen <- c("Brot", "Brötchen", "Crossaint", "Konditorei", "Kuchen", "Saisonbrot")
@@ -147,4 +161,5 @@ mod <- lm(Umsatz ~ Uebernachtungen + Temperatur + Windchill, Alles)
 summary(mod)
 
 table(kiwo)
+#nochmal zeigen wie das mit dem git geht
 ```
