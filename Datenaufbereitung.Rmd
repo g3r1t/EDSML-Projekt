@@ -200,16 +200,12 @@ names(feiertage_sh_csv)[names(feiertage_sh_csv) == "Tag"] <- "Datum"
 names(feiertage_sh_csv)[names(feiertage_sh_csv) == "Feiertage"] <- "Feiertagsname"
 Alles_mitfeiertagen<- full_join(Alles,feiertage_sh_csv, by = "Datum")
 
-#create boolean value for Feiertag
-#To Do: Spalte Bundesland aus Datensatz löschen
-#To Do: Schleife funktioniert nicht
+
 for (e in as.numeric(row.names(Alles_mitfeiertagen))) {  
-  if (Alles_mitfeiertagen$Feiertagsname[e] == "Neujahr") {
-    Alles_mitfeiertagen$Feiertag[e] <- 1
-  } else if (Alles_mitfeiertagen$Feiertagsname[e] =="Tag der Deutschen Einheit") {
-    Alles_mitfeiertagen$Feiertag[e] <- 1
+  if (is.na(Alles_mitfeiertagen$Feiertagsname[e])) {
+    Alles_mitfeiertagen$Feiertag[e] <- 0
   } else {
-    Alles_mitfeiertagen$Feiertage[e] <- 0
+    Alles_mitfeiertagen$Feiertag[e] <- 1
   }
 }
                 
