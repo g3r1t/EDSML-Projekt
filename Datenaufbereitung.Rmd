@@ -46,6 +46,8 @@ for (e in as.numeric(row.names(umsatzdaten)))
 kiwo <- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/kiwo.csv")
 ```
 
+
+
 ```{r import weather data}
 #import weather data
 wetterdaten <- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/wetter.csv")
@@ -185,3 +187,32 @@ summary(mod)
 table(kiwo)
 #nochmal zeigen wie das mit dem git geht
 ```
+
+
+```{r}
+#import Feiertage
+feiertage_sh_csv <- read_delim("https://raw.githubusercontent.com/g3r1t/EDSML-Projekt/main/feiertage_sh.csv.csv", 
+                               ";", escape_double = FALSE, trim_ws = TRUE)
+View(feiertage_sh_csv)
+#create variable 
+feiertage_sh_csv$Tag <- dmy(feiertage_sh_csv$Tag)
+names(feiertage_sh_csv)[names(feiertage_sh_csv) == "Tag"] <- "Datum"
+names(feiertage_sh_csv)[names(feiertage_sh_csv) == "Feiertage"] <- "Feiertagsname"
+Alles_mitfeiertagen<- full_join(Alles,feiertage_sh_csv, by = "Datum")
+
+#create boolean value for Feiertag
+#To Do: Spalte Bundesland aus Datensatz löschen
+#To Do: Schleife funktioniert nicht
+for (e in as.numeric(row.names(Alles_mitfeiertagen))) {  
+  if (Alles_mitfeiertagen$Feiertagsname[e] == "Neujahr") {
+    Alles_mitfeiertagen$Feiertag[e] <- 1
+  } else if (Alles_mitfeiertagen$Feiertagsname[e] =="Tag der Deutschen Einheit") {
+    Alles_mitfeiertagen$Feiertag[e] <- 1
+  } else {
+    Alles_mitfeiertagen$Feiertage[e] <- 0
+  }
+}
+                
+```
+```
+
