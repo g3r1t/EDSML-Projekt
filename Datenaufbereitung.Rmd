@@ -45,9 +45,6 @@ for (e in as.numeric(row.names(umsatzdaten)))
 #import kiwo data
 kiwo <- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/kiwo.csv")
 ```
-
-
-
 ```{r import weather data}
 #import weather data
 wetterdaten <- read_csv("https://raw.githubusercontent.com/opencampus-sh/einfuehrung-in-data-science-und-ml/main/wetter.csv")
@@ -70,6 +67,7 @@ for (e in as.numeric(row.names(wetterdaten)))
 
 #windchill vs Hitzeindex zum faktorisieren
 ```
+
 ```{r import overnight stay data}
 #The required data is saved in the form of *.xlsx sheets at https://www.statistik-nord.de/fileadmin/Dokumente/Statistische_Berichte/industrie__handel_und_dienstl/G_IV_1_m_S/G_IV_1-m1506_SH.xlsx 
 #in this case for the month of June of the year 2016 indicated by "1506". In theory only this four digit code changes. For 78 of the 84 months
@@ -135,8 +133,9 @@ Uebernachtungen <- as.numeric(Uebernachtungen[-1])
 #create common dataframe for "Uebernachtungen" and "JahrMonat"
 Uebernachtungen <- data.frame("Monatscode"=JahrMonat, "Uebernachtungen"=Uebernachtungen)
 
-# Spannweite der Übernachtungszahlen in Abhängigkeit vom Mittelwert ermitteln (hier muss noch aggregiert werden!14.05.2021, SBo)
 
+
+# Spannweite der Übernachtungszahlen in Abhängigkeit vom Mittelwert ermitteln (hier muss noch aggregiert werden!14.05.2021, SBo)
 mean_Uebernachtungen <- mean(Uebernachtungen$Uebernachtungen)
 span_Uebernachtungen = (max(Uebernachtungen$Uebernachtungen) - min(Uebernachtungen$Uebernachtungen))/mean_Uebernachtungen
 
@@ -161,6 +160,7 @@ as.factor(Uebernachtungen$Kategorie)
 ```{r merge datasets}
 #merge datasets
 KiwoUndUmsatz <- full_join(umsatzdaten, kiwo, by = "Datum")
+
 # convert NAs for KiWo to 0s
 KiwoUndUmsatz$KielerWoche[is.na(KiwoUndUmsatz$KielerWoche)] <- 0
 
@@ -169,9 +169,8 @@ Alles <- left_join(Alles, wettercodes, by = "Wettercode")
 
 #merge over night stays with "Alles"
 #create column of "Monatscode" for each date of "Alles" to full_join() by "Monatscode"
-
 for (e in as.numeric(row.names(Alles))) {
-Alles$Monatscode[e] <- paste(
+  Alles$Monatscode[e] <- paste(
   (year(Alles$Datum[e])-2000),
   formatC(month(Alles$Datum[e]), width = 2, format = "d", flag = "0"), sep = "")
 }
@@ -209,6 +208,5 @@ for (e in as.numeric(row.names(Alles_mitfeiertagen))) {
   }
 }
                 
-```
 ```
 
