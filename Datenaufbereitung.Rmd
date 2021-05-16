@@ -154,7 +154,7 @@ for (e in as.numeric(row.names(Uebernachtungen))) {
       Uebernachtungen$Kategorie[e] <- "hoch"
     }
 }
-as.factor(Uebernachtungen$Kategorie)
+Uebernachtungen$Kategorie <- as.factor(Uebernachtungen$Kategorie)
 ```
 
 ```{r import holiday data}
