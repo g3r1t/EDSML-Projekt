@@ -157,6 +157,21 @@ for (e in as.numeric(row.names(Uebernachtungen))) {
 as.factor(Uebernachtungen$Kategorie)
 ```
 
+```{r import holiday data}
+#import holiday data
+feiertage_sh <- read_delim("https://raw.githubusercontent.com/g3r1t/EDSML-Projekt/main/feiertage_sh.csv.csv", 
+                               ";", escape_double = FALSE, trim_ws = TRUE)
+
+#Delete colum Bundesland
+feiertage_sh[3] <-NULL
+
+#Convert Date to date format
+feiertage_sh$Tag <- dmy(feiertage_sh$Tag)
+names(feiertage_sh)[names(feiertage_sh) == "Tag"] <- "Datum"
+names(feiertage_sh)[names(feiertage_sh) == "Feiertage"] <- "Feiertagsname"
+```
+
+
 ```{r merge datasets}
 #merge datasets
 KiwoUndUmsatz <- full_join(umsatzdaten, kiwo, by = "Datum")
@@ -175,6 +190,18 @@ for (e in as.numeric(row.names(Alles))) {
   formatC(month(Alles$Datum[e]), width = 2, format = "d", flag = "0"), sep = "")
 }
 Alles <- full_join(Alles, Uebernachtungen, by = "Monatscode")
+
+#merge feiertage_sh with "Alles"
+Alles <- full_join(Alles,feiertage_sh, by = "Datum")
+
+#create boolean value for "weekend/workday"Feiertag" 1/0
+for (e in as.numeric(row.names(Alles))) {
+  if (is.na(Alles$Feiertagsname[e])) {
+    Alles$Feiertag[e] <- 0
+  } else {
+    Alles$Feiertag[e] <- 1
+  }
+}
 ```
 
 ```{r somewhat analyzed xD}
@@ -188,25 +215,5 @@ table(kiwo)
 ```
 
 
-```{r}
-#import Feiertage
-feiertage_sh_csv <- read_delim("https://raw.githubusercontent.com/g3r1t/EDSML-Projekt/main/feiertage_sh.csv.csv", 
-                               ";", escape_double = FALSE, trim_ws = TRUE)
-View(feiertage_sh_csv)
-#create variable 
-feiertage_sh_csv$Tag <- dmy(feiertage_sh_csv$Tag)
-names(feiertage_sh_csv)[names(feiertage_sh_csv) == "Tag"] <- "Datum"
-names(feiertage_sh_csv)[names(feiertage_sh_csv) == "Feiertage"] <- "Feiertagsname"
-Alles_mitfeiertagen<- full_join(Alles,feiertage_sh_csv, by = "Datum")
 
-
-for (e in as.numeric(row.names(Alles_mitfeiertagen))) {  
-  if (is.na(Alles_mitfeiertagen$Feiertagsname[e])) {
-    Alles_mitfeiertagen$Feiertag[e] <- 0
-  } else {
-    Alles_mitfeiertagen$Feiertag[e] <- 1
-  }
-}
-                
-```
 
