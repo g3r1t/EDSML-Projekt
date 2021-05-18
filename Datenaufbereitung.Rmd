@@ -224,6 +224,9 @@ summary(mod5)
 mod6 <- lm(Umsatz ~ Kategorie + Windchill + as.factor(Feiertag) + as.factor(Wochenende) + as.factor(KielerWoche), Alles)
 summary(mod6)
 
+mod7 <- lm(Umsatz ~ Kategorie + Windchill + as.factor(Feiertag) + as.factor(Wochenende) + as.factor(KielerWoche) + as.factor(Warengruppe) , Alles)
+summary(mod7)
+
 
 ```
 
