@@ -206,12 +206,25 @@ for (e in as.numeric(row.names(Alles))) {
 
 ```{r somewhat analyzed xD}
 #ein bisschen code aus der Vorlesung
-mod <- lm(Umsatz ~ Uebernachtungen + Temperatur + Windchill, Alles)
+mod1 <- lm(Umsatz ~ Kategorie, Alles)
+summary(mod1)
 
-summary(mod)
+mod2 <- lm(Umsatz ~ Windchill, Alles)
+summary(mod2)
 
-table(kiwo)
-#nochmal zeigen wie das mit dem git geht
+mod3 <- lm(Umsatz ~ as.factor(Wochenende), Alles)
+summary(mod3)
+
+mod4 <- lm(Umsatz ~ as.factor(KielerWoche), Alles)
+summary(mod4)
+
+mod5 <- lm(Umsatz ~ as.factor(Feiertag), Alles)
+summary(mod5)
+
+mod6 <- lm(Umsatz ~ Kategorie + Windchill + as.factor(Feiertag) + as.factor(Wochenende) + as.factor(KielerWoche), Alles)
+summary(mod6)
+
+
 ```
 
 
